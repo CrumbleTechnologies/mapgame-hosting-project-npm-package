@@ -3,6 +3,9 @@ var admin = require("firebase-admin")
 
 var MapgameBotUtilFunctions = require("./MapgameBotUtilFunctions")
 var RegisterNation = require("./RegisterNation")
+var ApplicationManagement = require("./ApplicationManagement")
+var MapHelper = require("./MapHelper")
+var NationManager = require("./NationManager")
 
 class MapgameClient {
     constructor(discordBotToken, pathToFirebaseToken) {
@@ -42,3 +45,6 @@ class MapgameClient {
 exports.MapgameClient = MapgameClient
 exports.MapgameBotUtilFunctions = MapgameBotUtilFunctions
 exports.RegisterNation = RegisterNation
+exports.ApplicationManagement = ApplicationManagement
+exports.MapHelper = MapHelper
+exports.NationManager = NationManager
