@@ -116,7 +116,7 @@ class RegisterNation {
                                                     var embed = new this.Discord.MessageEmbed()
                                                         .setColor("#009900")
                                                         .setTitle("Map claim instructions")
-                                                        .addField("How to get your map claim code", "Visit the website [here](https://phyrik.github.io/mapgame-discord-bot/map-province-picker.html) and follow the instructions to generate your mapgame code file.")
+                                                        .addField("How to get your map claim code", "Visit the website [here](https://mapgame-hosting-project.crumble-technologies.co.uk/map-province-picker) and follow the instructions to generate your mapgame code file.")
                                                         .addField("Ok... what now?", "Simply send the file you downloaded from the site here! Once you've done that, you will get a confirmation message.")
                                                     msg.channel.send(embed)
 
@@ -144,7 +144,7 @@ class RegisterNation {
                                                                                 if (mapPath == "error parsing map code") {
                                                                                     mapClaimCollector.collected.delete(mapClaimCollector.collected.lastKey())
 
-                                                                                    cMsg.channel.send("Invalid map code. Send another map claim code from [the website](https://phyrik.github.io/mapgame-discord-bot/map-province-picker.html).")
+                                                                                    cMsg.channel.send("Invalid map code. Send another map claim code from [the website](https://mapgame-hosting-project.crumble-technologies.co.uk/map-province-picker).")
 
                                                                                     return
                                                                                 }
@@ -156,7 +156,7 @@ class RegisterNation {
                                                                 } catch {
                                                                     mapClaimCollector.collected.delete(mapClaimCollector.collected.lastKey())
 
-                                                                    cMsg.channel.send("Invalid map code. Send another map claim code from [the website](https://phyrik.github.io/mapgame-discord-bot/map-province-picker.html). Make sure it is in a file.")
+                                                                    cMsg.channel.send("Invalid map code. Send another map claim code from [the website](https://mapgame-hosting-project.crumble-technologies.co.uk/map-province-picker). Make sure it is in a file.")
                                                                 }
                                                                 break;
 
@@ -167,7 +167,7 @@ class RegisterNation {
                                                                     mapClaimCollector.collected.delete(mapClaimCollector.collected.lastKey())
                                                                     mapClaimCollector.collected.delete(mapClaimCollector.collected.lastKey())
 
-                                                                    cMsg.channel.send("Send another map claim code from the website (https://phyrik.github.io/mapgame-discord-bot/map-province-picker.html).")
+                                                                    cMsg.channel.send("Send another map claim code from the website (https://mapgame-hosting-project.crumble-technologies.co.uk/map-province-picker).")
                                                                 }
                                                                 break;
 
@@ -241,6 +241,9 @@ class RegisterNation {
         const Discord = require("discord.js")
         var ref = db.ref("discord-servers/" + guildID + "/nationApplications")
         ref.once("value", (snapshot) => {
+            if (!snapshot.exists()) {
+                return
+            }
             Object.keys(snapshot.val()).forEach(userID => {
                 db.ref("discord-servers/" + guildID + "/nationApplications/" + userID + "/status").on("value", (snapshot) => {
                     switch (snapshot.val()) {

@@ -21,7 +21,7 @@ class MapgameClient {
             console.log(`Logged in as ${this.discordClient.user.tag}`)
 
             this.discordClient.guilds.cache.array().forEach(guild => {
-                RegisterNation.setupFirebaseValueChecksForNationApplicationsAndNationCreation(db, client, guild.id, new MapgameBotUtilFunctions(client))
+                RegisterNation.setupFirebaseValueChecksForNationApplicationsAndNationCreation(this.db, this.discordClient, guild.id, new MapgameBotUtilFunctions(this.discordClient))
             });
         })
 
