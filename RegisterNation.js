@@ -9,7 +9,7 @@ class RegisterNation {
         this.request = require("request")
     }
 
-    start(msg) {
+    start(msg, discordClient) {
         var checkRef = this.db.ref("discord-servers/" + this.guildID + "/config/setupComplete")
         checkRef.once("value", (snapshot) => {
             if (snapshot.val() == "yes") {
@@ -192,6 +192,8 @@ class RegisterNation {
                                                             ref.update(formJSONObject)
 
                                                             collected.array()[0].channel.send("Done! Your registration form is now submitted. To cancel it, type \"" + parentThis.config.prefix + "cancel-registration\".")
+
+                                                            setupFirebaseValueChecksForNationApplicationsAndNationCreation(this.db, discordClient, this.guildID, this.mapgameBotUtilFunctions)
                                                         })
                                                     })
                                                     break;
@@ -203,6 +205,8 @@ class RegisterNation {
                                                     ref.update(formJSONObject)
 
                                                     collected.array()[0].channel.send("Done! Your registration form is now submitted. To cancel it, type \"" + this.config.prefix + "cancel-registration\".")
+
+                                                    setupFirebaseValueChecksForNationApplicationsAndNationCreation(this.db, discordClient, this.guildID, this.mapgameBotUtilFunctions)
                                                     break;
 
                                                 default:

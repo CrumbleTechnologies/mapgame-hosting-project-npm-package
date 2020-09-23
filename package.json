@@ -1,6 +1,6 @@
 {
     "name": "mapgame-hosting-project",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "A helper package for making node.js projects that work with the MHP and discord.js",
     "main": "index.js",
     "scripts": {
