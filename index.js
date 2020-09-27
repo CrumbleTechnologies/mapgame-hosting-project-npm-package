@@ -2,7 +2,7 @@ const Discord = require("discord.js")
 var admin = require("firebase-admin")
 
 var MapgameBotUtilFunctions = require("./MapgameBotUtilFunctions")
-var RegisterNation = require("./RegisterNation")
+var FirebaseDatabaseValueChecks = require("./FirebaseDatabaseValueChecks")
 var ApplicationManagement = require("./ApplicationManagement")
 var NationManager = require("./NationManager")
 
@@ -19,9 +19,17 @@ class MapgameClient {
         this.discordClient.on("ready", () => {
             console.log(`Logged in as ${this.discordClient.user.tag}`)
 
-            this.discordClient.guilds.cache.array().forEach(guild => {
-                RegisterNation.setupFirebaseValueChecksForNationApplicationsAndNationCreation(this.db, this.discordClient, guild.id, new MapgameBotUtilFunctions(this.discordClient))
-            });
+            this.db.ref("list-of-mapgame-ids").on("value", (snapshot) => {
+                snapshot.val().forEach(guildID => {
+                    this.db.ref("discord-servers/" + guildID + "/config/categoryToAddNationChannelsToID").on("value", (snapshot2) => {
+                        try {
+                            this.discordClient.guilds.cache.get(guildID).channels.cache.get(snapshot2.val()).updateOverwrite(this.discordClient.user, { MANAGE_CHANNELS: true })
+                        } catch {}
+                    })
+                    FirebaseDatabaseValueChecks.setupChecksForNationApplicationsAndNationCreation(this.db, this.discordClient, guildID, new MapgameBotUtilFunctions(this.discordClient))
+                        // TODO: firebase checks for map claims to send world map
+                });
+            })
         })
 
         this.discordClient.on("guildCreate", guild => {
@@ -43,6 +51,6 @@ class MapgameClient {
 
 exports.MapgameClient = MapgameClient
 exports.MapgameBotUtilFunctions = MapgameBotUtilFunctions
-exports.RegisterNation = RegisterNation
+exports.FirebaseDatabaseValueChecks = FirebaseDatabaseValueChecks
 exports.ApplicationManagement = ApplicationManagement
 exports.NationManager = NationManager
