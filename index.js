@@ -19,15 +19,17 @@ class MapgameClient {
             console.log(`Logged in as ${this.discordClient.user.tag}`)
 
             this.db.ref("list-of-mapgame-ids").on("value", (snapshot) => {
-                snapshot.val().forEach(guildID => {
-                    this.db.ref("discord-servers/" + guildID + "/config/categoryToAddNationChannelsToID").on("value", (snapshot2) => {
-                        try {
-                            this.discordClient.guilds.cache.get(guildID).channels.cache.get(snapshot2.val()).updateOverwrite(this.discordClient.user, { MANAGE_CHANNELS: true })
-                        } catch {}
-                    })
-                    FirebaseDatabaseValueChecks.setupChecksForNationApplicationsAndNationCreation(this.db, this.discordClient, guildID, new MapgameBotUtilFunctions(this.discordClient))
-                        // TODO: firebase checks for map claims to send world map
-                });
+                if (snapshot.exists()) {
+                    snapshot.val().forEach(guildID => {
+                        this.db.ref("discord-servers/" + guildID + "/config/categoryToAddNationChannelsToID").on("value", (snapshot2) => {
+                            try {
+                                this.discordClient.guilds.cache.get(guildID).channels.cache.get(snapshot2.val()).updateOverwrite(this.discordClient.user, { MANAGE_CHANNELS: true })
+                            } catch {}
+                        })
+                        FirebaseDatabaseValueChecks.setupChecksForNationApplicationsAndNationCreation(this.db, this.discordClient, guildID, new MapgameBotUtilFunctions(this.discordClient))
+                            // TODO: firebase checks for map claims to send world map
+                    });
+                }
             })
         })
 
