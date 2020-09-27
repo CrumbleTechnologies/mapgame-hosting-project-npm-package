@@ -3,7 +3,6 @@ var admin = require("firebase-admin")
 
 var MapgameBotUtilFunctions = require("./MapgameBotUtilFunctions")
 var FirebaseDatabaseValueChecks = require("./FirebaseDatabaseValueChecks")
-var ApplicationManagement = require("./ApplicationManagement")
 var NationManager = require("./NationManager")
 
 class MapgameClient {
@@ -52,5 +51,4 @@ class MapgameClient {
 exports.MapgameClient = MapgameClient
 exports.MapgameBotUtilFunctions = MapgameBotUtilFunctions
 exports.FirebaseDatabaseValueChecks = FirebaseDatabaseValueChecks
-exports.ApplicationManagement = ApplicationManagement
 exports.NationManager = NationManager
