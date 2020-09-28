@@ -10,14 +10,15 @@ class FirebaseDatabaseValueChecks {
                 db.ref("discord-servers/" + guildID + "/nationApplications/" + userID + "/status").on("value", (snapshot) => {
                     switch (snapshot.val()) {
                         case "accepted":
-                            client.users.cache.get(userID).send("Your nation application for the server \"" + client.guilds.cache.get(guildID).name + "\" has been accepted!")
+                            db.ref("discord-servers/" + guildID + "/nations/" + userID + "/status").once("value", (snapshot3) => {
+                                if (snapshot3.val() == "active") {
+                                    return
+                                }
 
-                            db.ref("discord-servers/" + guildID + "/config").once("value", (snapshot1) => {
-                                db.ref("discord-servers/" + guildID + "/nationApplications/" + userID).once("value", (snapshot2) => {
-                                    db.ref("discord-servers/" + guildID + "/nations/" + userID + "/status").once("value", (snapshot3) => {
-                                        if (snapshot3.val() == "active") {
-                                            return
-                                        }
+                                client.users.cache.get(userID).send("Your nation application for the server \"" + client.guilds.cache.get(guildID).name + "\" has been accepted!")
+
+                                db.ref("discord-servers/" + guildID + "/config").once("value", (snapshot1) => {
+                                    db.ref("discord-servers/" + guildID + "/nationApplications/" + userID).once("value", (snapshot2) => {
                                         if (snapshot1.val().nicknameTemplate) {
                                             try {
                                                 client.guilds.cache.get(guildID).members.cache.get(userID).setNickname(mapgameBotUtilFunctions.replaceTemplateWithFieldValues(snapshot1.val().nicknameTemplate, snapshot1.val().listOfFieldsForRegistration, snapshot2.val().fields)).catch(error => console.log(error))
