@@ -2,7 +2,7 @@ class FirebaseDatabaseValueChecks {
     static setupChecksForNationApplicationsAndNationCreation(db, client, guildID, mapgameBotUtilFunctions) {
         const Discord = require("discord.js")
         var ref = db.ref("discord-servers/" + guildID + "/nationApplications")
-        ref.once("value", (snapshot) => {
+        ref.on("value", (snapshot) => {
             if (!snapshot.exists()) {
                 return
             }
