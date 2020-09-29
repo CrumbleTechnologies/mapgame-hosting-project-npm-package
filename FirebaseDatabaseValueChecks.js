@@ -1,14 +1,19 @@
 class FirebaseDatabaseValueChecks {
     static setupChecksForNationApplicationsAndNationCreation(db, client, guildID, mapgameBotUtilFunctions) {
+        console.log("doing nation application firebase checks...")
         const Discord = require("discord.js")
         var ref = db.ref("discord-servers/" + guildID + "/nationApplications")
         ref.on("value", (snapshot) => {
             if (!snapshot.exists()) {
                 return
             }
+            console.log(snapshot.val())
             Object.keys(snapshot.val()).forEach(userID => { // Object.keys only returns first level keys, no recursion
-                db.ref("discord-servers/" + guildID + "/nationApplications/" + userID + "/status").on("value", (snapshot) => {
-                    switch (snapshot.val()) {
+                console.log("setting up firebase checks for nationApplication: " + userID)
+                db.ref("discord-servers/" + guildID + "/nationApplications/" + userID + "/status").off()
+                db.ref("discord-servers/" + guildID + "/nationApplications/" + userID + "/status").on("value", (snapshot5) => {
+                    console.log("sb1")
+                    switch (snapshot5.val()) {
                         case "accepted":
                             db.ref("discord-servers/" + guildID + "/nations/" + userID + "/status").once("value", (snapshot3) => {
                                 if (snapshot3.val() == "active") {
@@ -48,12 +53,13 @@ class FirebaseDatabaseValueChecks {
 
                                         db.ref("discord-servers/" + guildID + "/nations").update({
                                             [userID]: snapshot2.val()
-                                        })
+                                        }).then(() => {
+                                            db.ref("discord-servers/" + guildID + "/nations/" + userID + "/status").set("active")
 
-                                        db.ref("discord-servers/" + guildID + "/nations/" + userID + "/status").set("active")
-
-                                        db.ref("discord-servers/" + guildID + "/mapClaimCode").once("value", (snapshot4) => {
-                                            db.ref("discord-servers/" + guildID + "/mapClaimCode").set(snapshot4.val() + "," + snapshot2.mapClaimCode())
+                                            db.ref("discord-servers/" + guildID + "/mapClaimCode").once("value", (snapshot4) => {
+                                                console.log(snapshot2.val())
+                                                db.ref("discord-servers/" + guildID + "/mapClaimCode").set(snapshot4.val() + "," + snapshot2.mapClaimCode)
+                                            })
                                         })
                                     })
                                 })
@@ -76,6 +82,7 @@ class FirebaseDatabaseValueChecks {
                             break;
                     }
                 })
+                db.ref("discord-servers/" + guildID + "/nationApplications/" + userID + "/status").off()
             })
         })
     }
