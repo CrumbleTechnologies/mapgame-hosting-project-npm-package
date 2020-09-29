@@ -26,8 +26,13 @@ class MapgameClient {
                                 this.discordClient.guilds.cache.get(guildID).channels.cache.get(snapshot2.val()).updateOverwrite(this.discordClient.user, { MANAGE_CHANNELS: true })
                             } catch {}
                         })
+                        this.db.ref("discord-servers/" + guildID + "/config/worldMapChannelID").on("value", (snapshot2) => {
+                            try {
+                                this.discordClient.guilds.cache.get(guildID).channels.cache.get(snapshot2.val()).updateOverwrite(this.discordClient.user, { SEND_MESSAGES: true })
+                            } catch {}
+                        })
                         FirebaseDatabaseValueChecks.setupChecksForNationApplicationsAndNationCreation(this.db, this.discordClient, guildID, new MapgameBotUtilFunctions(this.discordClient))
-                            // TODO: firebase checks for map claims to send world map
+                        FirebaseDatabaseValueChecks.setupChecksForWorldMapClaimCode(this.db, this.discordClient, guildID, new MapgameBotUtilFunctions(this.discordClient))
                     });
                 }
             })

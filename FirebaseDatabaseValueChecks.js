@@ -51,6 +51,10 @@ class FirebaseDatabaseValueChecks {
                                         })
 
                                         db.ref("discord-servers/" + guildID + "/nations/" + userID + "/status").set("active")
+
+                                        db.ref("discord-servers/" + guildID + "/mapClaimCode").once("value", (snapshot4) => {
+                                            db.ref("discord-servers/" + guildID + "/mapClaimCode").set(snapshot4.val() + "," + snapshot2.mapClaimCode())
+                                        })
                                     })
                                 })
                             })
@@ -71,6 +75,18 @@ class FirebaseDatabaseValueChecks {
                         default:
                             break;
                     }
+                })
+            })
+        })
+    }
+
+    static setupChecksForWorldMapClaimCode(db, client, guildID, mapgameBotUtilFunctions) {
+        const Discord = require("discord.js")
+        var ref = db.ref("discord-servers/" + guildID + "/mapClaimCode")
+        ref.on("value", (snapshot) => {
+            mapgameBotUtilFunctions.generateMapFromMapCode(snapshot.val()).then((mapPath) => {
+                db.ref("discord-servers/" + guildID + "/config/worldMapChannelID").once("value", (snapshot2) => {
+                    client.guilds.cache.get(guildID).channels.cache.get(snapshot2.val()).send("World map:", { files: [mapPath] })
                 })
             })
         })
