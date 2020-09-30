@@ -44,7 +44,7 @@ class MapgameBotUtilFunctions {
 
     async generateMapFromMapCode(code, getNumberOfTiles = false) {
         var spawn = this.childProcess.spawn
-        var pythonProcess = spawn("python", ["generate-map.py", code])
+        var pythonProcess = spawn("python3", ["generate-map.py", code])
 
         return new Promise((resolve, reject) => {
             pythonProcess.stdout.on("data", data => {
